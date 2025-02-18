@@ -54,6 +54,6 @@ resource "google_cloudfunctions2_function" "xml_to_json_function" {
 
   # Add source code hash to trigger updates only when code changes
   labels = {
-    source_hash = data.archive_file.function_source.output_base64sha256
+    deployment = substr(data.archive_file.function_source.output_md5, 0, 63)
   }
 }  
