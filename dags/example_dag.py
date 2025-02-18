@@ -1,5 +1,6 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.operators.bash import BashOperator
 from datetime import datetime, timedelta
 
 default_args = {
@@ -20,3 +21,10 @@ dag = DAG(
 )
 
 # Add your operators here 
+t1 = BashOperator(
+    task_id='echo',
+    bash_command='echo test',
+    dag=dag,
+    depends_on_past=False,
+    priority_weight=2**31 - 1,
+    do_xcom_push=False)
