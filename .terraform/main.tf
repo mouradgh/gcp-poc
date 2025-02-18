@@ -8,3 +8,9 @@ terraform {
     } 
   } 
 }
+
+provider "google" {
+  credentials = var.gcp-creds
+  project     = var.project
+  region      = var.region
+}
