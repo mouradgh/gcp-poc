@@ -33,5 +33,17 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-# GCP key
-*terraform-key.json
+# Ignore providers
+.terraform/providers/**
+providers/
+
+# Ignore sensitive credential files
+*terraform-key.json*
+*credentials.json*
+*.json.key
+*application_default_credentials.json*
+*service-account*.json
+*keyfile*.json
+
+# Ignore the lock file
+*terraform.lock*
