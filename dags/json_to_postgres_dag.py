@@ -27,7 +27,7 @@ def load_json_to_postgres(**context):
     
     # Initialize GCS and Postgres hooks
     gcs_hook = GCSHook()
-    pg_hook = PostgresHook(postgres_conn_id='postgres_default')
+    pg_hook = PostgresHook(postgres_conn_id='alloydb')
     
     for file_path in files:
         # Download and parse JSON content
