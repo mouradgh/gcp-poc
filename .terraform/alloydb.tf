@@ -1,6 +1,6 @@
 # AlloyDB Cluster
 resource "google_alloydb_cluster" "gigawatt" {
-  cluster_id = "alloydb-cluster"
+  cluster_id = "alloydb-cluster-gigawatt"
   location   = var.region
   network_config {
     network = "default"
@@ -16,7 +16,7 @@ resource "google_alloydb_cluster" "gigawatt" {
 # Primary Instance
 resource "google_alloydb_instance" "gigawatt" {
   cluster       = google_alloydb_cluster.gigawatt.name
-  instance_id   = "alloydb-instance"
+  instance_id   = "alloydb-instance-gigawatt"
   instance_type = "PRIMARY"
 
   machine_config {
