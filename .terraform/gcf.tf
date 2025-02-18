@@ -1,15 +1,21 @@
 # Cloud Run Functions requires a zip file of the function source code
-data "archive_file" "function-source" {
+data "archive_file" "function_source" {
   type        = "zip"
-  output_path = "../functions/xml-to-json-converter/function-source.zip"
-  source_dir = "../functions/xml-to-json-converter/"
+  source_dir  = "${path.module}/../functions/xml-to-json-converter"
+  output_path = "${path.module}/../functions/xml-to-json-converter.zip"
 }
 
 # Upload the zip file to the functions bucket
-resource "google_storage_bucket_object" "xml_to_json_converter_function_source" {
-  name   = "xml-to-json-converter/function-source.zip"
-  source = "../functions/xml-to-json-converter/function-source.zip"
-  bucket = "gigawatt-functions-bucket"
+resource "google_storage_bucket_object" "function_archive" {
+  name   = "functions/xml-to-json-converter-${data.archive_file.function_source.output_md5}.zip"
+  bucket = google_storage_bucket.gigawatt_functions_bucket.name
+  source = data.archive_file.function_source.output_path
+
+  # Add content hash to force update only when zip content changes
+  content_type = "application/zip"
+  metadata = {
+    source_hash = data.archive_file.function_source.output_base64sha256
+  }
 }
 
 # Create the Cloud Run Function
@@ -23,8 +29,8 @@ resource "google_cloudfunctions2_function" "xml_to_json_function" {
     entry_point = "convert_xml_to_json"
     source {
       storage_source {
-        bucket = "gigawatt-functions-bucket"
-        object = "xml-to-json-converter/function-source.zip"
+        bucket = google_storage_bucket.gigawatt_functions_bucket.name
+        object = google_storage_bucket_object.function_archive.name
       }
     }
   }
@@ -44,5 +50,10 @@ resource "google_cloudfunctions2_function" "xml_to_json_function" {
       attribute = "bucket"
       value    = "gigawatt-raw-data"
     }
+  }
+
+  # Add source code hash to trigger updates only when code changes
+  labels = {
+    source_hash = data.archive_file.function_source.output_base64sha256
   }
 }  
