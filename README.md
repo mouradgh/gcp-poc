@@ -29,6 +29,9 @@ The .terraform folder contains the TF code :
 The functions folder contains the Cloud Functions code :
 - xml-to-json-converter to automatically convert XML files to JSON
 
+The dags folder contains the Airflow DAGs :
+- json_to_postgres_dag to insert the JSON files into the AlloyDB database
+
 
 ## Cloud Run Function
 
